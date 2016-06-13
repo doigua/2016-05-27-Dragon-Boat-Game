@@ -1,0 +1,792 @@
+<!doctype html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+        <meta http-equiv="pragma" content="no-cache" />
+        <meta http-equiv="cache-control" content="no-cache" />
+        <meta http-equiv="expires" content="0" />
+        <!-- QQ强制竖屏 -->
+		<meta name="x5-orientation" content="portrait">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+	
+	<title>端午龙舟赛</title>
+	
+	<link rel="stylesheet" href="css/shipGame.css" />
+	<script src="js/jquery-1.11.3.min.js"></script>
+	
+	<!--Wechat interface-->
+	<!--<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>-->
+	<script src="js/jweixin-1.0.0.js"></script>
+
+	
+	
+	<script src="js/template.js"></script> 
+    <script src="js/global.js"></script>
+	
+	
+	<script type="text/javascript">
+	
+/*			setwx({
+				debug:false,
+				title:"；荷包社区龙舟赛，端午送流量！",
+				desc:"端午节荷包社区送流量啦，快来参赛赢取手机流量吧！",
+				imgurl:"http://myteamproject.oss-cn-beijing.aliyuncs.com/hxjj/7-14/06.jpg",
+			 });
+*/ 
+			function preventDefault(ev) {
+				ev.preventDefault();
+			};
+			function isScroller(el) {
+				// 判断元素是否为 scroller
+				return el.classList.contains('scroller');
+			};
+		
+		
+		
+			window.onload=function(){
+				document.addEventListener('touchmove', preventDefault, false);
+				document.body.addEventListener('touchmove', function (ev) {
+				var target = ev.target;
+					// 在 scroller 上滑动，阻止事件冒泡，启用浏览器默认行为。
+					if (isScroller(target)){
+						ev.stopPropagation();
+					}
+				}, false);
+			};
+	
+			$(document).ready(function(){
+				wxInit();
+/*				var ua = navigator.userAgent.indexOf('Android');
+				if( ua > -1){
+					$(".user-info-phone").on("focus", function(){
+						$("").css({"visibility" : "hidden"})
+					}).on("blur", function(){
+						$("").css({"visilility": "visible"})
+					})
+				}
+*/				
+				$("#action-div").on("touchstart", function(){
+					event.preventDefault();
+					$("#action-div").parent().css("display","none");
+				});
+
+				
+				<!-- Rules -->
+				$(".index-rules").on("touchstart", function(){
+					event.preventDefault();
+					$(".index-rules-details").css("display", "block");
+
+				});
+				
+				$(".index-rules-details").on("touchstart", function(){
+					$(".index-rules-details").css("display", "none");
+				});
+				
+				<!-- Counting -->
+				var count = 0;
+				var second = 15;
+				var number = 0;
+				var code = 0;
+				
+				$(".number-div").text("" + count + "");
+				$(".timer").text("时间:" + 15 + " 秒");
+				
+				
+				$(".how-to-play").on("touchstart", function(){
+					second = 15;
+					$(".how-to-play").css("display", "none");
+					$(".ready-go-bg").css("display", "block");
+					$(".ready").css("display", "block");
+					setTimeout("$('.go').css('display', 'block')",800);
+					setTimeout("$('.ready').css('display', 'none')",1000);
+					setTimeout("$('.go').css('display', 'none')",1500);
+					setTimeout("$('.ready-go-bg').css('display', 'none')",1600);
+				});
+				$(".tree").css({"animationPlayState":"paused"});
+				
+				var LoadTimer;
+				$(".play-div-action").on("touchstart", function(){
+					$(".timer").text("时间:" + second + " 秒");
+					$(".play-div-action").css("display", "none");	
+					$(".tree").css({"animationPlayState":"running"});
+					
+					<!-- setInterval Start and Stop -->
+					LoadTimer = setInterval(countDown,1000);
+				
+					count++;
+					$(".number-div").text("" + count + "");
+				});
+				
+				
+				$(".play-div").on("touchstart", function(){
+					count++;
+					$(".number-div").text("" + count + "");
+				});
+				
+				
+
+				<!-- Timer -->
+				function countDown(){
+					second--;
+					if( second > 0 ){
+						$(".timer").text("时间:" + second + " 秒");
+					}else if(second == 0){
+						$(".play-div-end").css("display", "block");
+						$(".end-bg").css("display", "block");
+						$(".end").css("display", "block");	
+						$(".tree").css({"animationPlayState":"paused"});						
+						$(".score-number").text(count);
+						$(".timer").text("时间:" + 0 + " 秒");
+						
+						setTimeout("$('.score').css('display', 'block')",3000);
+						setTimeout("$('.end').css('display', 'none')",3000);
+						if (number == 0){
+							setTimeout("$('.user-info').css('display', 'block')",3000);
+						}else{
+							setTimeout("$('.submit-score').css('display', 'block');",3000);
+						}
+						wxInit();
+					}else{
+						
+					}
+				};
+				
+				
+				
+				
+				/**/
+/*				$(".play-div").click(clickFun);
+
+				setInterval(updateSpeed,1000);
+				var count = 0;
+				var miles = 0;
+				//1s执行1次
+				function updateSpeed(){
+				
+					var time = "26s";
+					if(count >= 1 && count <= 2){
+						time = "21s";
+					}else if(count >= 3 && count <= 4){
+						time = "16s";
+					}else if(count >= 5 && count <= 6)
+						time = "11s";
+					if(count >= 7 && count <= 8)
+						time = "6s";
+					if(count >= 9 && count <= 10)
+						time = "1s";
+					
+					//$(".tree").css("-webkit-animation-duration", time);
+					//$(".tree").css("animation-duration", time);
+					//$(".tree").css("animation-timing-function", "ease-in-out");
+					
+					count=0;
+				}
+		
+				//click fun
+				function clickFun(){
+				count++;
+				miles++;
+				$(".number-div").text(miles);
+				}
+*/			
+
+
+		
+
+			//Stop Default.
+/*			function stopDefault(e){
+				if(e&&e.preventDefault){
+					e.preventDefault();
+				}
+				else{
+					window.event.returnValue-false;
+				}
+				return false;
+			}
+			stopDefault();
+*/
+
+
+
+				<!-- Get SMS Code -->
+				
+				$(".user-info-get").on("touchstart", function(){
+					number = $("#user-info-phone").val();
+					if( number != 0 ){
+						$.ajax({ 
+							type : "POST", 
+							url  : ctx+"/unauth/gamesScoreInfo/sendMsg",   
+							data :  {"phoneNumber":number}, 
+							dataType:"json",
+							ContentType:"application/json",
+							
+							success : function(res,status){
+								if(res.code=='10000'){
+									$(".user-info-get").css("display", "none");
+									$(".user-info-get-click").css("display", "block");
+									$(".user-info-msg").text("正在获取验证码,30秒后再试。" );
+									setTimeout("$('.user-info-get').css('display', 'block')",30000);
+									setTimeout("$('.user-info-get-click').css('display', 'none')",30000);
+									setTimeout("$('.user-info-msg').text('')",30000);
+								}else{
+									$(".user-info-msg").text(res.msg );
+								}
+							}, 
+							
+							error : function(data,status){
+							
+							},
+							
+							complete: function(XMLHttpRequest, textStatus){
+
+							},
+							
+						});
+					}else{
+						$(".user-info-msg").text("请输入正确的手机号码。" );
+					}
+				});
+				
+				
+
+				<!--Submit Phone Number-->
+				
+				$(".user-info-submit").on("touchstart", function(){
+					
+					
+					number = $("#user-info-phone").val();
+					code = $("#user-info-code").val();
+					if(number!=0){
+						if(code !=0){
+							$.ajax({ 
+								type : "POST", 
+								url  : ctx+"/unauth/gamesScoreInfo/check",   
+								data :  {"phoneNumber": number, "code": code }, 
+								dataType:"json",
+								ContentType:"application/json",
+								
+								success : function(res,status){
+									if( res.code == '10000' ){
+										<!--Pop Windows Submit Your Score-->
+										$(".user-info").css("display", "none");
+										$(".submit-score").css("display", "block");
+										$(".user-info-msg").html("");
+									}else{
+										$(".user-info-msg").html(":( 验证码错误。");
+										number = 0;
+									}
+								}, 
+								
+								error : function(data,status){
+									$(".user-info-msg").html(":( 获取验证码失败。");
+									number = 0
+								},
+								
+								complete: function(XMLHttpRequest, textStatus){
+
+								},
+								
+							});
+						}else{
+							$(".user-info-msg").text("请输入正确的验证码。" );
+						}
+					}else{
+						$(".user-info-msg").text("请输入正确的手机号码。" );
+					}
+					
+					
+					
+				});				
+				
+				
+				$(".user-info-bg").on("touchstart", function(){
+					$(".user-info").css("display", "none");
+					$(".user-info-msg").html("");
+				});
+				
+				
+				
+				
+				<!-- Submit your score ( Get the telephone number already ) -->
+				<!--Submit Score-->
+				$(".submit-score-yes").on("touchstart", function(){
+					$.ajax({ 	
+						type : "post", 
+						url  : ctx+"/unauth/gamesScoreInfo/insertGamesScore",
+						dataType:"json",
+						data:{"phoneNum":number,"gameScore":count,"gameName":"端午划龙舟"},
+						ContentType:'application/json',
+						success : function(res){
+							if( res.code == '10000' ){
+								$(".user-info-msg").html(":) 提交成功！");
+								
+								$(".submit-score").css("display", "none");
+								wxInit();
+							}else{
+								$(".submit-score-msg").html(":( " + res.msg);
+							}
+										
+						},
+						error : function(data,status){
+							$(".user-info-msg").html(":( 提交失败！");
+						},
+						complete: function(XMLHttpRequest, textStatus){
+
+						},
+					});
+				});
+				
+				$(".submit-score-no").on("touchstart", function(){
+					$(".submit-score").css("display", "none");
+				});
+				
+				
+				
+				
+				<!-- Ranking List -->
+				$(".score-ranking").on("touchstart", function(){
+					getRankingList();
+					$(".rank").css("display", "block");
+					
+				});
+				
+				$(".rank").on("touchstart", function(){
+					$(".rank").css("display", "none");
+					$("#rank-table").html("");
+					$("#my-rank").html("<tr><td class='column0'></td><td class='column1'>...</td><td class='column2'></td></tr>");
+				});
+	
+
+	
+				<!-- Again -->
+				$(".score-again").on("touchstart", function(){
+					count = 0;
+					second = 15;
+					clearInterval(LoadTimer);
+					$(".timer").text("时间:" + second + " 秒");
+					$(".number-div").text("" + count + "");
+					$(".score").css("display", "none");
+					$(".how-to-play").css("display", "block");
+					$(".ready-go-bg").css("display", "none");
+					$(".end-bg").css("display", "none");
+					$(".play-div-action").css("display", "block");
+					$(".play-div-end").css("display", "none");
+					$(".submit-score-msg").text("");
+				});
+
+				
+				<!-- Share -->
+				$(".score-share").on("touchstart", function(){
+					$(".share").css("display", "block");	
+				});
+				
+				$(".share").on("touchstart", function(){
+					$(".share").css("display", "none");	
+				});
+				
+				
+				
+				
+				
+				
+				
+				<!-- Move forbidden when out of the screen -->
+				//document.body.addEventListener('touchmove', function(event){ console.log(1);
+				//	event.preventDefault();
+				//}, false);
+				
+				
+				
+
+				<!-- Get Ranking List -->
+				
+				var n = 0;
+				var html = ['<tr><td class="column0">n</td><td class="column1">**********</td><td class="column2"> - </td></tr>'].join("");			
+				function getRankingList(){
+					$.ajax({ 
+						
+						type : "post", 
+						url  : ctx+"/unauth/gamesScoreInfo/findAllGamesScore",
+						dataType:"json",
+						data:{"gameName":"端午划龙舟","phoneNum":number},
+						ContentType:'application/json',
+						success : function(res){
+							if(res.code == "10000"){
+							
+								$("#rank-table").html('<tr><th class="column0">No</th><th>手机号</th><th>距离(米)</th></tr>');
+								if(res.list.length >= 5){
+									for( n=0; n<=5; n++ ){
+										html = ['<tr><td class="column0">',n+1,'</td><td class="column1">',res.list[n].phoneNum,'</td><td class="column2">',res.list[n].gameScore,'</td></tr>'].join("");
+										$("#rank-table").append(html);
+									}
+								}else{
+									for( n=0; n<res.list.length-1; n++ ){
+										html = ['<tr><td class="column0">',n+1,'</td><td class="column1">',res.list[n].phoneNum,'</td><td class="column2">',res.list[n].gameScore,'</td></tr>'].join("");
+										$("#rank-table").append(html);
+									}
+								}
+
+								for( n=0; n<=res.list.length-1; n++ ){
+									if(number == res.list[n].phoneNum){
+										html = ['<tr style="color:#d14e4e;"><td class="column0">',n+1,'</td><td class="column1">',number,'</td><td class="column2">',res.list[n].gameScore,'</td></tr>'].join("");
+										$("#my-rank").append(html);
+										break;
+									}
+								}
+							}else{
+								$("#rank-table").append(":( 查找出错了");
+							}
+						},
+						error : function(data,status){
+						
+						},
+						complete: function(XMLHttpRequest, textStatus){
+
+						},
+					});
+				};
+				
+				function wxInit(){
+					if(is_weixin()){
+						var appId = storageGet('a');
+						var timestamp = storageGet('t');
+						var nonceStr = storageGet('n');
+						var signature = storageGet('gs');
+						if(appId!=null&&signature!=null){
+							wx.config({
+							    debug: false,
+							    appId: appId,
+							    timestamp: timestamp,
+							    nonceStr: nonceStr,
+							    signature: signature,
+							    jsApiList: [ 
+									'onMenuShareTimeline','onMenuShareAppMessage','onMenuShareQQ','onMenuShareWeibo'
+							    ]
+							});
+							
+							wx.ready(function(){
+								//分享给朋友
+								wx.onMenuShareAppMessage({
+									title: '荷包社区赛龙舟，赢百元话费流量！', // 分享标题
+									desc: '敢来跟我比试比试吗？！我滑了'+count+'米', // 分享描述
+									link: 'https://wap.drcbank.com:999/wechat/mobile/access!o2o_goto_game.sy', // 分享链接
+									imgUrl:'https://www.drcbanko2o.com/upload/20160526/gameWxShare.gif', // 分享图标
+									type: '', // 分享类型,music、video或link，不填默认为link
+									dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+									success: function () { 
+									// 用户确认分享后执行的回调函数
+									//alert('a');
+									  
+									},
+									cancel: function () { 
+									  // 用户取消分享后执行的回调函数
+									}
+								});
+								
+								//分享到朋友圈
+								wx.onMenuShareTimeline({
+									title: '荷包社区赛龙舟，赢百元话费流量！', // 分享标题
+									desc: '敢来跟我比试比试吗？！我滑了'+count+'米', // 分享描述
+									link: 'https://wap.drcbank.com:999/wechat/mobile/access!o2o_goto_game.sy', // 分享链接
+									imgUrl:'https://www.drcbanko2o.com/upload/20160526/gameWxShare.gif', // 分享图标
+									success: function () { 
+									// 用户确认分享后执行的回调函数
+									//alert(data['desc']);
+									},
+									cancel: function () { 
+									// 用户取消分享后执行的回调函数
+									}
+								});
+								
+								//分享到QQ
+								wx.onMenuShareQQ({
+									title: '荷包社区赛龙舟，赢百元话费流量！', // 分享标题
+									desc: '敢来跟我比试比试吗？！我滑了'+count+'米', // 分享描述
+									link: 'https://wap.drcbank.com:999/wechat/mobile/access!o2o_goto_game.sy', // 分享链接
+									imgUrl:'https://www.drcbanko2o.com/upload/20160526/gameWxShare.gif', // 分享图标
+									success: function () { 
+									// 用户确认分享后执行的回调函数
+									},
+									cancel: function () { 
+									// 用户取消分享后执行的回调函数
+									}
+								});
+								
+								//分享到腾讯微博
+								wx.onMenuShareWeibo({
+									title: '荷包社区赛龙舟，赢百元话费流量！', // 分享标题
+									desc: '敢来跟我比试比试吗？！我滑了'+count+'米', // 分享描述
+									link: 'https://wap.drcbank.com:999/wechat/mobile/access!o2o_goto_game.sy', // 分享链接
+									imgUrl:'https://www.drcbanko2o.com/upload/20160526/gameWxShare.gif', // 分享图标
+									success: function () { 
+									// 用户确认分享后执行的回调函数
+									},
+									cancel: function () { 
+									// 用户取消分享后执行的回调函数
+									}
+								});
+							}); 
+							
+						}
+					}
+				}
+				
+				function is_weixin(){
+					var ua = navigator.userAgent.toLowerCase();
+					if(ua.match(/MicroMessenger/i)=="micromessenger"){
+						return true;
+					}else{
+						return false;
+					}
+				}
+				
+//				wx.error(function(res)){
+//					alert("Erroer!");
+//				}
+				
+				<!-- Move forbidden when out of the screen -->
+//				document.body.addEventListener('touchmove', function(event){
+//					event.preventDefault();
+//				}, false);
+				
+				
+				
+				
+				
+			});	
+			
+		</script>    
+
+	
+</head>
+
+<body>
+
+	
+	<!-- Page 1 -->
+	<div id ="text" class="index">	
+	
+		<div class="index-rules">
+			<img src="images/rules_button.png" alt="rules">
+		</div>
+		
+		
+
+		<div class="index-rules-details">
+			<img class="index-rules-details-bg" src="images/cover-bg.png" alt="rules-details">
+			<img class="index-rules-details-body"src="images/rules_details.gif" alt="rules-details">
+		</div>
+	
+		<div id="action-div" class="action-div">
+			<img src="images/action-button.png" alt="Play">
+		</div>
+		<div class="index-dg-div">
+			<img src="images/bg-index-s.png" alt="dragon">
+		</div>
+		<div class="index-div">
+			<img src="images/bg-index.gif" alt="background">
+		</div>
+		<div class="index-front-div">
+			<img src="images/bg_2.gif" alt="front">
+		</div>
+		
+		
+		<div class="cloud">
+			<div class="index-cloud1-div">
+				<img src="images/cloud_1.png" alt="cloud">
+			</div>
+			<div class="index-cloud2-div">
+				<img src="images/cloud_2.png" alt="cloud">
+			</div>
+			<div class="index-cloud3-div">
+				<img src="images/cloud_3.png" alt="cloud">
+			</div>
+		</div>
+		
+		
+		<div class="sun">
+			<div class="index-sun-div">
+				<img src="images/sun.gif" alt="cloud">
+			</div>
+		</div>
+		
+		<div class="title">
+			<div class="index-title-div">
+				<img src="images/title.png" alt="cloud">
+			</div>
+		</div>
+		
+		<div class="spindrift">
+			<div class="index-spindrift1-div">
+				<img src="images/sd_1.png" alt="cloud">
+			</div>
+			<div class="index-spindrift2-div">
+				<img src="images/sd_2.png" alt="cloud">
+			</div>
+			<div class="index-spindrift3-div">
+				<img src="images/sd_3.png" alt="cloud">
+			</div>
+			<div class="index-spindrift4-div">
+				<img src="images/sd_4.png" alt="cloud">
+			</div>
+			<div class="index-spindrift5-div">
+				<img src="images/sd_5.png" alt="cloud">
+			</div>
+			<div class="index-spindrift6-div">
+				<img src="images/sd_6.png" alt="cloud">
+			</div>
+			<div class="index-spindrift7-div">
+				<img src="images/sd_7.png" alt="cloud">
+			</div>
+		</div>
+		
+	</div>
+	
+	
+	
+	<!--  Page 2 -->
+	<div class="main">
+	
+
+		<div class="timer">
+		</div>
+		
+		<div class="number-bg">
+			<img src="images/count.png" alt="background">
+		</div>
+		<div class="number-div"></div>
+		
+
+		
+		<div class="ship-div">
+			<img id="ship" class="ship" src="images/ship-body.gif" alt="ship-body">
+		</div>
+		
+		
+		
+		
+		<div class="play-div">
+			<img src="images/play.png" alt="Play">
+		</div>
+		<div class="play-div-end">
+			<img src="images/play.png" alt="Play">
+		</div>
+		<div class="play-div-action">
+			<img src="images/play.png" alt="Play">
+		</div>
+		
+		
+		
+		
+		<div class="how-to-play"><img src="images/ani-how.png" alt="How"></div>
+		<div class="ready-go-bg"><img src="images/cover-bg.png"></div>
+		<div class="ready"><img src="images/ani-ready.png" alt="Ready"></div>
+		<div class="go"><img src="images/ani-go.png" alt="Go"></div>
+		<div class="end-bg"><img src="images/cover-bg.png"></div>
+		<div class="end"><img src="images/ani-end.png" alt="Play"></div>
+		
+		<div class="tree-div">
+			<div id="tree" class="tree">
+				<img src="images/bg.gif" alt="background">
+			</div>
+		</div>
+		
+		<div class="user-info">
+			<img class="user-info-bg" src="images/cover-bg.png">
+			<img class="user-info-body" src="images/info.gif">
+			<div class="user-info-checkcode">
+				<img class="user-info-input" src="images/info-input-button.png">
+				<img class="user-info-get" src="images/info-get-button.png">
+				<img class="user-info-get-click" src="images/info-get-button-gray.png">
+			</div>
+			<img class="user-info-submit" src="images/info-submit-button.png">
+			<input name="user-info-phone" id="user-info-phone" class="user-info-phone"></input>
+			<input name="user-info-code" id="user-info-code" class="user-info-code"></input>  
+			<h4 class="user-info-msg"></h4>
+		</div>
+		
+		<div class="submit-score">
+			<img class="submit-score-bg" src="images/cover-bg.png">
+			<img class="submit-score-body" src="images/record-bg.png">
+			<div class="submit-score-button">
+				<img class="submit-score-yes" src="images/yes.png">
+				<img class="submit-score-no" src="images/no.png">
+			</div>
+			<h4 class="submit-score-msg"></h4>
+		</div>
+		
+		
+	
+	</div>
+	
+	<!-- Page 3 -->
+	<div class="score">
+		<div class="score-bg">
+			<img src="images/score-bg.gif" alt="score-bg">
+		</div>
+		
+		
+		<h1 class="score-number"></h1>
+		
+		<div class="score-again">
+			<img src="images/again-button.gif" alt="score-bg">
+		</div>
+		<div class="score-share">
+			<img src="images/share-button.gif" alt="share-body">
+		</div>
+		
+		<div class="score-ranking">
+			<img src="images/ranking-button.gif" alt="score-bg">
+		</div>
+	</div>
+	
+	
+	
+	<!-- Page 4 -->
+	<div class="rank">
+		<img class="rank-bg" src="images/cover-bg.png" alt="ranking-bg">
+		<div class="rank-body">
+			<img src="images/ranking-bg.gif" alt="ranking-body">
+		</div>
+		<div class="rank-content">
+			<table id="rank-table" class="rank-table" border="0px">
+				<tr>
+					<th class="column0">No</th>
+					<th>手机号</th>
+					<th>距离(m)</th>
+				</tr>
+				
+			</table>	
+			<table id="my-rank">
+				<tr>
+					<td class="column0"></td>
+					<td class="column1">...</td>
+					<td class="column2"></td>
+				</tr>
+
+			
+			</table>
+			<table border="0px">
+				<tr>
+					
+					<th><td  class="rank-content-tips">(当前排名非最终结果)</td></th>
+					
+				</tr>
+				
+			</table>
+			
+		</div>
+		
+		
+	</div>
+	
+	<div class="share">
+		<img class="share-bg" src="images/cover-bg.png" alt="share-bg">
+		<img class="share-pic" src="images/share-bg.png" alt="share-body">
+	</div>
+	
+		
+</body>
+
+</html>
